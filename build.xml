@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- defina o nome do projeto e o target padrão a ser executado -->
+<project name="Criar de executaveis .jar" default="criarExecutavel">
+    <!-- define as propriedades --> 
+    <property name="diretorio-compilacao" location="target/classes" />
+    <property name="diretorio-executavel" location="bin" />
+
+    <!-- target para excluir os diretórios existentes --> 
+    <target name="limpar" description="limpar a pasta de compilação">
+        <delete dir="${diretorio-compilacao}"></delete>
+    </target>
+
+    <!-- target para criar os novos diretórios --> 
+    <target name="inicializacao">
+        <tstamp /> <!-- cria um timestamp -->
+
+        <mkdir dir="${diretorio-compilacao}" />
+        <mkdir dir="${diretorio-executavel}" />
+    </target>
+
+    <!-- target para compilar o código java -->
+    <target name="compilacao" depends="limpar, inicializacao">
+        <javac destdir="${diretorio-compilacao}" includeantruntime="false" debug="true">
+            <src path="src" />
+        </javac>
+    </target>
+
+    <!-- target padrão para executar todos os outros targets --> 
+    <target name="criarExecutavel" depends="compilacao">
+        <jar destfile="${diretorio-executavel}/executavel.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="dev.neypinheiro.Application" />
+                <attribute name="Class-Path" value="." />
+            </manifest>
+            <fileset dir="${diretorio-compilacao}" />
+        </jar>
+    </target>
+</project>
